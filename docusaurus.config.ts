@@ -48,14 +48,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/Ulman-huy/docusaurus/tree/docs",
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -90,7 +83,7 @@ const config: Config = {
           items: [
             {
               label: "React",
-              to: "/docs/intro",
+              to: "/docs/react",
             },
           ],
         },
@@ -104,7 +97,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Documentation. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Ulman-huy. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
