@@ -35,12 +35,7 @@ const config: Config = {
       /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
       {
         // ... Your options.
-        // `hashed` is recommended as long-term-cache of index file is possible.
         hashed: true,
-        // For Docs using Chinese, The `language` is recommended to set to:
-        // ```
-        // language: ["en", "zh"],
-        // ```
       },
     ],
   ],
@@ -68,24 +63,23 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-
   themeConfig: {
     // Replace with your project's social card
     colorMode: { defaultMode: "light" },
     navbar: {
-      title: "",
+      title: "Docs",
       logo: {
         alt: "Logo",
         src: "img/logo.svg",
       },
       items: [
-        {
-          type: "docSidebar",
-          sidebarId: "tutorialSidebar",
-          position: "left",
-          label: "Tutorial",
-        },
-        { to: "/blog", label: "Blog", position: "left" },
+        // {
+        //   type: "docSidebar",
+        //   sidebarId: "tutorialSidebar",
+        //   position: "left",
+        //   label: "Tutorial",
+        // },
+        // { to: "/blog", label: "Blog", position: "left" },
       ],
     },
     footer: {

@@ -33,6 +33,9 @@
 .navbar__search-input {
   border-radius: 8px;
 }
+.navbar__search-input:focus-within {
+  outline-color: #520044;
+}
 .navbar__inner {
   max-width: 1440px;
   margin: auto;
