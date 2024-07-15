@@ -1,0 +1,70 @@
+---
+title: useOutsideClick()
+---
+
+import UseOutsideClickExample from "./example/UseOutsideClickExample";
+
+# useOutsideClick()
+
+The useOutsideClick in React is used to detect clicks outside of a specified element. It returns a ref that you attach to the element you want to monitor for clicks outside of, a boolean value indicating whether a click outside has occurred, and a function to manually set this boolean value.
+
+### Code
+
+```ts title="useOutsideClick.ts"
+import { useState, useEffect, useRef } from "react";
+
+function useOutsideClick() {
+  const [click, setClick] = useState<boolean>(false);
+  const ref = useRef<any>();
+
+  useEffect(() => {
+    const handleClick = (e: any) => {
+      if (ref?.current && !ref.current.contains(e.target)) {
+        setClick(false);
+      } else {
+        setClick(true);
+      }
+    };
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, [ref]);
+
+  return { ref, click, setClick };
+}
+
+export default useOutsideClick;
+```
+
+### Example
+
+```jsx
+import useOutsideClick from "@site/src/hooks/useOutsideClick";
+
+const UseOutsideClickExample = () => {
+  const { ref, click } = useOutsideClick();
+
+  return (
+    <div>
+      <div
+        ref={ref}
+        style={{
+          width: 200,
+          height: 100,
+          padding: 16,
+          cursor: "pointer",
+          background: "#52004410",
+        }}
+      >
+        Click me!
+      </div>
+      <p style={{ margin: 8 }}>{click ? "Click Inside!" : "Click Outside!"}</p>
+    </div>
+  );
+};
+
+export default UseOutsideClickExample;
+```
+
+### Output
+
+<UseOutsideClickExample />

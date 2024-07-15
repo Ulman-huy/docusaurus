@@ -1,4 +1,4 @@
-import Tabs from "./Tabs";
+import Tabs from "@site/src/components/Tabs";
 
 const TabsExample = () => {
   const items = [

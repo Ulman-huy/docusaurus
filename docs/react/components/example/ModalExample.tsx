@@ -1,5 +1,5 @@
+import Modal from "@site/src/components/Modal";
 import { useState } from "react";
-import Modal from "./Modal";
 
 const ModalExample = () => {
   const [open, setOpen] = useState(false);

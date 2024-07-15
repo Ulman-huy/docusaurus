@@ -1,4 +1,4 @@
-import RatingStar from "./RatingStar";
+import RatingStar from "@site/src/components/RatingStar";
 
 const RatingStarExample = () => {
   return (

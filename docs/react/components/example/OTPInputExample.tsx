@@ -1,5 +1,5 @@
+import OTPInput from "@site/src/components/OTPInput";
 import { useState } from "react";
-import OTPInput from "./OTPInput";
 
 const OTPInputExample = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));

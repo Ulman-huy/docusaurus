@@ -1,4 +1,4 @@
-import Select from "./Select";
+import Select from "@site/src/components/Select";
 
 const SelectExample = () => {
   return (

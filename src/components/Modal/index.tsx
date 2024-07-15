@@ -40,10 +40,19 @@ const Modal: React.FC<Props> = ({
   return (
     <>
       {init && (
-        <div className={`modal__container ${open ? "modal__mask--show" : "modal__mask--hide"}`}>
-          <div className="modal__mask" onClick={() =>  maskClose && onCancel && onCancel()} />
+        <div
+          className={`modal__container ${
+            open ? "modal__mask--show" : "modal__mask--hide"
+          }`}
+        >
           <div
-            className={`modal__main ${className} ${open ? "modal__show" : "modal__hide"}`}
+            className="modal__mask"
+            onClick={() => maskClose && onCancel && onCancel()}
+          />
+          <div
+            className={`modal__main ${className} ${
+              open ? "modal__show" : "modal__hide"
+            }`}
             style={{ maxWidth: width }}
           >
             <div className="modal__content" style={{ maxWidth: width }}>
