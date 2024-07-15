@@ -1,0 +1,87 @@
+---
+title: useCookie()
+---
+
+import UseCookieExample from "./example/UseCookieExample"
+
+# useCookie()
+
+This useCookie custom hook in React is designed to simplify the management of cookies using the js-cookie library. It allows you to easily read and write cookies within your React components.
+
+### Code
+
+```ts title="useCookie.ts"
+import { useState, useCallback } from "react";
+import Cookies from "js-cookie";
+
+export default function useCookie(name: string, defaultValue: string) {
+  const [value, setValue] = useState<string | null>(() => {
+    const cookie = Cookies.get(name);
+    if (cookie) return cookie;
+    Cookies.set(name, defaultValue);
+    return defaultValue;
+  });
+
+  const updateCookie = useCallback(
+    (newValue: string, options?: { [key: string]: string | number }) => {
+      Cookies.set(name, newValue, options);
+      setValue(newValue);
+    },
+    [name]
+  );
+
+  const deleteCookie = useCallback(() => {
+    Cookies.remove(name);
+    setValue(null);
+  }, [name]);
+
+  return [value, updateCookie, deleteCookie];
+}
+```
+
+### Example
+
+```jsx
+import useCookie from "@site/src/hooks/useCookie";
+import { useState } from "react";
+
+const UseCookieExample = () => {
+  const [value, updateCookie, deleteCookie] = useCookie("key", "John Smith");
+  const [input, setInput] = useState("");
+
+  return (
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <p>
+        Value: <span style={{ fontWeight: 600 }}>{value as string}</span>
+      </p>
+      <input
+        style={{ padding: 8, border: "1px solid #ddd" }}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Enter new value!"
+      />
+      <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+        <button
+          style={{ border: "1px solid #ddd", padding: "0 32px" }}
+          onClick={() => updateCookie(input)}
+        >
+          Update
+        </button>
+        <button
+          style={{ border: "1px solid #ddd", padding: "0 32px" }}
+          onClick={() => deleteCookie()}
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default UseCookieExample;
+```
+
+### Output
+
+<UseCookieExample />

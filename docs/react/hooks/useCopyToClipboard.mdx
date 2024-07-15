@@ -1,0 +1,84 @@
+---
+title: useCopyToClipboard()
+---
+
+import UseCopyToClipboardExample from "./example/UseCopyToClipboardExample"
+
+# useCopyToClipboard()
+
+This useCopyToClipboard hook in React is designed to facilitate copying text to the clipboard. It returns a tuple containing the copied value (if any) and a function to copy text.
+
+### Code
+
+```tsx title="useCopyToClipboard.ts"
+import { useCallback, useState } from "react";
+
+type CopiedValue = string | null;
+
+type CopyFn = (text: string) => Promise<boolean>;
+
+export function useCopyToClipboard(): [CopiedValue, CopyFn] {
+  const [copiedText, setCopiedText] = useState<CopiedValue>(null);
+
+  const copy: CopyFn = useCallback(async (text) => {
+    if (!navigator?.clipboard) {
+      console.warn("Clipboard not supported");
+      return false;
+    }
+
+    // Try to save to clipboard then save it in the state if worked
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedText(text);
+      return true;
+    } catch (error) {
+      console.warn("Copy failed", error);
+      setCopiedText(null);
+      return false;
+    }
+  }, []);
+
+  return [copiedText, copy];
+}
+```
+
+### Example
+
+```jsx
+import { useCopyToClipboard } from "@site/src/hooks/useCopyToClipboard";
+import { useState } from "react";
+
+const UseCopyToClipboardExample = () => {
+  const [value, setValue] = useState("John Smith");
+  const [copiedText, copy] = useCopyToClipboard();
+
+  return (
+    <div>
+      <input
+        style={{
+          padding: 8,
+          border: "1px solid #ddd",
+          display: "block",
+          width: "100%",
+        }}
+        placeholder="Enter value and Copy!"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <button
+        style={{ display: "block", width: "100%", padding: 4, marginTop: 4 }}
+        onClick={() => copy(value)}
+      >
+        Copy
+      </button>
+      <p className="mt-2">Value: {copiedText}</p>
+    </div>
+  );
+};
+
+export default UseCopyToClipboardExample;
+```
+
+### Output
+
+<UseCopyToClipboardExample />

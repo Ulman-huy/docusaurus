@@ -1,0 +1,62 @@
+---
+title: useFetch()
+---
+
+import UseFetchExample from "./example/UseFetchExample"
+
+# useFetch()
+
+This useFetch custom hook in React is designed to simplify data fetching from an API using the fetch API. It returns an object containing the fetched data and any potential error that occurred during the fetch process.
+
+### Code
+
+```ts title="useFetch.ts"
+import { useState, useEffect } from "react";
+
+export default function useFetch(
+  url: string,
+  options?: { [key: string]: string | number }
+) {
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resp = await fetch(url, options);
+        const res = await resp.json();
+        if (isMounted) setData(res);
+      } catch (e: any) {
+        if (isMounted) setData(null);
+        if (isMounted) setError(e);
+      }
+    };
+
+    let isMounted = true;
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  return { data, error };
+}
+```
+
+### Example
+
+```jsx
+import useFetch from "@site/src/hooks/useFetch";
+
+const UseFetchExample = () => {
+  const { data } = useFetch("https://jsonplaceholder.typicode.com/todos/1");
+
+  return <div>{data ? JSON.stringify(data) : ""}</div>;
+};
+
+export default UseFetchExample;
+```
+
+### Output
+
+<UseFetchExample />
