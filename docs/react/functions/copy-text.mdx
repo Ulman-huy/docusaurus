@@ -1,0 +1,25 @@
+---
+title: copyText()
+---
+
+# copyText()
+
+The copyText function you provided is a simple utility function that attempts to copy a given text to the clipboard using the navigator.clipboard.writeText() method. However, there's a slight issue with it: navigator.clipboard.writeText(text) returns a Promise, but you're not handling the result of this Promise in your function.
+
+### Code
+
+```ts title="copyText.ts"
+const copyText = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (error) {
+    console.error(error);
+  }
+};
+```
+
+### Example
+
+```jsx
+copyText("Copy now!");
+```
