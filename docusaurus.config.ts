@@ -48,8 +48,6 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl: "https://github.com/Ulman-huy/docusaurus/tree/docs",
-          path: "../../",
-          include: ["**/*.md", "**/*.mdx"],
         },
         theme: {
           customCss: "./src/css/custom.css",
