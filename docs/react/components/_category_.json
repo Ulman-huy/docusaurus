@@ -1,4 +1,7 @@
 {
   "position": 2,
-  "label": "Components"
+  "label": "Components",
+  "link": {
+    "type": "generated-index"
+  }
 }

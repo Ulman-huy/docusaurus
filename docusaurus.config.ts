@@ -49,12 +49,18 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl: "https://github.com/Ulman-huy/docusaurus/tree/docs",
         },
+        blog: {
+          showReadingTime: true,
+          // Please change this to your repo.
+          // Remove this to remove the "edit this page" links.
+        },
         theme: {
           customCss: "./src/css/custom.css",
         },
       } satisfies Preset.Options,
     ],
   ],
+  onBrokenAnchors: "ignore",
   themeConfig: {
     // Replace with your project's social card
     colorMode: { defaultMode: "light" },
