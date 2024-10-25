@@ -57,7 +57,7 @@ const Select: React.FC<SelectProps> = ({
 
   const onSelect = (item: { value: string; label: string }) => {
     if (onChange) {
-      onChange();
+      onChange(item);
     }
     setValue(item.label);
     setClick(false);

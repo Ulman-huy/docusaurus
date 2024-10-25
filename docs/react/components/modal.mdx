@@ -45,179 +45,131 @@ export default ModalExample;
 ### Code
 
 ```jsx title="Modal/index.tsx"
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import ReactPortal from "./ReactPortal";
+import clsx from "clsx";
 
-type Props = {
+interface ModalProps {
+  children: React.ReactNode;
   open: boolean;
-  onCancel?: () => void;
-  children?: ReactNode;
+  onClose: () => void;
+  isBackground?: boolean;
   className?: string;
-  maskClose?: boolean;
-  btnClose?: boolean;
-  width?: number | string;
-};
+}
 
-const Modal: React.FC<Props> = ({
-  open,
-  onCancel,
+const Modal = ({
   children,
+  open,
+  onClose,
+  isBackground = true,
   className,
-  maskClose = true,
-  btnClose = true,
-  width = 300,
-}) => {
-  const [init, setInit] = useState(false);
+}: ModalProps) => {
+  const [animate, setAnimate] = useState(false);
+  const [isFirst, setIsFirst] = useState(true);
 
   useEffect(() => {
-    const timmer = setTimeout(() => {
-      setInit(open);
-      if (open) {
-        const scrollWidth =
-          window.innerWidth - document.documentElement.clientWidth;
-        document.body.style.overflow = "hidden";
-        document.body.style.paddingRight = scrollWidth + "px";
-      } else {
-        document.body.style.overflow = "auto";
-        document.body.style.paddingRight = "0px";
+    if (open) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+      document.body.style.marginRight = "0";
+    };
+  }, []);
+
+  useEffect(() => {
+    const closeOnEscapeKey = (e: KeyboardEvent) =>
+      e.key === "Escape" ? onClose() : null;
+    document.body.addEventListener("keydown", closeOnEscapeKey);
+    return () => {
+      document.body.removeEventListener("keydown", closeOnEscapeKey);
+    };
+  }, [onClose]);
+
+  useEffect(() => {
+    if (open) {
+      setAnimate(true);
+      return;
+    }
+    if (!isFirst && !open) {
+      setIsFirst(true);
+      return;
+    }
+    let timer = setTimeout(() => {
+      if (!open) {
+        setAnimate(false);
       }
-    }, 150);
-    return () => clearTimeout(timmer);
-  }, [open]);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [open, isFirst]);
+
+  if (!open && !animate) return null;
 
   return (
-    <>
-      {init && (
-        <div className={`modal__container ${open ? "modal__mask--show" : "modal__mask--hide"}`}>
-          <div className="modal__mask" onClick={() =>  maskClose && onCancel && onCancel()} />
-          <div
-            className={`modal__main ${className} ${open ? "modal__show" : "modal__hide"}`}
-            style={{ maxWidth: width }}
-          >
-            <div className="modal__content" style={{ maxWidth: width }}>
-              {btnClose && (
-                <span
-                  onClick={() => onCancel && onCancel()}
-                  className="modal__btn--close"
-                >
-                  <svg
-                    width={24}
-                    height={24}
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 384 512"
-                  >
-                    <path
-                      fill="#222831"
-                      d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-                    />
-                  </svg>
-                </span>
-              )}
-              <div className="modal__children">{children}</div>
-            </div>
-          </div>
+    <ReactPortal wrapperId="modal">
+      <div
+        className={clsx(
+          "fixed inset-0 bg-black-50/30 backdrop-blur-sm transition-opacity opacity-0 z-50 flex items-center justify-center",
+          open ? "!opacity-100" : ""
+        )}
+      >
+        <div className="absolute inset-0" onClick={onClose} />
+        <div
+          className={clsx(
+            "z-10 min-w-[300px]",
+            open ? "modal__show" : "modal__hide",
+            isBackground
+              ? "bg-black-50/90 border-white/10 border p-4 rounded-lg"
+              : "",
+            className
+          )}
+          style={
+            isBackground
+              ? {
+                  boxShadow: " 0px 4px 12px 0px rgba(0, 0, 0, 0.60)",
+                }
+              : {}
+          }
+        >
+          {children}
         </div>
-      )}
-    </>
+      </div>
+    </ReactPortal>
   );
 };
-
 export default Modal;
 ```
 
 ### Style
 
 ```css
-.modal__container {
-  position: fixed;
-  inset: 0;
-  background: #00000035;
-  z-index: 9999;
-  display: flex;
-}
-.modal__mask {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-.modal__main {
-  padding: 16px;
-  z-index: 2;
-  width: 100%;
-  margin: auto;
-}
-.modal__content {
-  padding: 16px;
-  background: #fff;
-  border-radius: 16px;
-  width: 100%;
-  min-height: 100px;
-}
-.modal__btn--close {
-  position: absolute;
-  z-index: 1;
-  right: 32px;
-  top: 32px;
-  cursor: pointer;
-}
-.modal__children {
-  max-height: 90vh;
-  overflow: hidden;
-}
-.modal__mask--show {
-  animation: show__mask 0.15s linear forwards;
-}
-.modal__mask--hide {
-  animation: hide__mask 0.15s linear forwards;
-}
 .modal__show {
-  animation: show__modal 0.15s linear forwards;
-}
-.modal__hide {
-  animation: hide__modal 0.15s linear forwards;
+  animation: modal__show 0.3s linear forwards;
 }
 
-@keyframes show__mask {
-  0% {
-    opacity: 0;
-    display: flex;
-  }
-  100% {
-    opacity: 1;
-    display: flex;
-  }
+.modal__hide {
+  animation: modal__hide 0.3s linear forwards;
 }
-@keyframes hide__mask {
-  0% {
-    opacity: 1;
-    display: flex;
-  }
-  100% {
+
+@keyframes modal__show {
+  from {
     opacity: 0;
-    display: none;
+    transform: translateY(-20px);
   }
-}
-@keyframes hide__modal {
-  0% {
+  to {
+    opacity: 1;
     transform: translateY(0);
-    opacity: 1;
-    display: block;
-  }
-  100% {
-    transform: translateY(10px);
-    opacity: 0;
-    display: none;
   }
 }
-@keyframes show__modal {
-  0% {
-    transform: translateY(-10px);
-    opacity: 0;
-    display: block;
-  }
-  100% {
-    transform: translateY(0);
+
+@keyframes modal__hide {
+  from {
     opacity: 1;
-    display: block;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
   }
 }
 ```
