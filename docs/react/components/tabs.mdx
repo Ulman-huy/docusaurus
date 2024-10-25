@@ -37,10 +37,12 @@ export default TabsExample;
 ### Code
 
 ```jsx title="Tabs/index.tsx"
+import clsx from "clsx";
 import { ReactNode, useEffect, useState } from "react";
 
 interface TabsProps {
   defaultActiveKey?: string;
+  idChange?: any;
   items: {
     key: string;
     label: string;
@@ -48,7 +50,11 @@ interface TabsProps {
   }[];
 }
 
-const Tabs: React.FC<TabsProps> = ({ defaultActiveKey, items = [] }) => {
+const Tabs: React.FC<TabsProps> = ({
+  defaultActiveKey,
+  idChange = "",
+  items = [],
+}) => {
   const [active, setActive] = useState(defaultActiveKey ?? items[0].key);
   const [index, setIndex] = useState(() => {
     let result = 0;
@@ -57,13 +63,7 @@ const Tabs: React.FC<TabsProps> = ({ defaultActiveKey, items = [] }) => {
         result = index;
       }
     });
-    return result++;
-  });
-  const [content, setContent] = useState<ReactNode>(() => {
-    return (
-      items.find((item) => item?.key == defaultActiveKey)?.content ??
-      items[0].content
-    );
+    return result;
   });
 
   useEffect(() => {
@@ -71,53 +71,50 @@ const Tabs: React.FC<TabsProps> = ({ defaultActiveKey, items = [] }) => {
       setActive(defaultActiveKey);
       items.map((item, index) => {
         if (item.key == defaultActiveKey) {
-          setContent(item.content);
-          setIndex(index++);
+          setIndex(index);
         }
       });
     }
-  }, [defaultActiveKey]);
+  }, [defaultActiveKey, idChange]);
 
   return (
-    <div>
-      <div style={{ display: "flex" }}>
+    <>
+      <div className="flex justify-center">
         {items.map((item, index) => (
           <div
             key={item.key}
             onClick={() => {
               setActive(item.key);
-              setContent(item.content);
-              setIndex(index++);
+              setIndex(index);
             }}
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              cursor: "pointer",
-              padding: "4px 0",
-              ...(active == item.key ? { color: "#520044" } : {}),
-            }}
+            className={clsx(
+              "w-full flex justify-center cursor-pointer p-2.5 pb-2 text-sm transition",
+              active == item.key
+                ? "text-green-50 font-bold"
+                : "text-white/60 font-medium"
+            )}
           >
             <span>{item.label}</span>
           </div>
         ))}
       </div>
-      <div style={{ height: 2, width: "100%", background: "#e6e6e6" }}>
+      <div style={{ height: 2, width: "100%", background: "#FFFFFF1A" }}>
         <div
           style={{
             width: `${100 / items.length}%`,
             transform: `translateX(${100 * index}%)`,
             height: "100%",
-            background: "#520044",
+            background: "#009874",
             transitionDuration: "200ms",
             transition: "transform cubic-bezier(0.4, 0, 0.2, 1) 150ms",
           }}
         ></div>
       </div>
-      <div>{content}</div>
-    </div>
+      {items[index].content}
+    </>
   );
 };
 
 export default Tabs;
+
 ```
